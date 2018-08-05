@@ -3,9 +3,10 @@ def main():
     from sqlalchemy import create_engine
     from app.user_class import User
     from app.main_alg import main_alg
+    from app.db_connect_conf import connect_string
 
 
-    engine = create_engine("mysql+pymysql://paypro:paypro@localhost/paypro?charset=utf8mb4")
+    engine = create_engine(connect_string)
     Session = sessionmaker(bind=engine)
 
     session = Session()

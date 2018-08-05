@@ -170,3 +170,4 @@ venv.bak/
 
 .idea/
 /out/
+/app/db_connect_conf.py
