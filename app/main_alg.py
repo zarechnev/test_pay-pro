@@ -1,5 +1,5 @@
 from .user_class import User
-import re
+import os
 
 
 def generate_file_name(user: User) -> str:
