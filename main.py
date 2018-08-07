@@ -1,29 +1,33 @@
 def main():
-    from sqlalchemy.orm import sessionmaker
-    from sqlalchemy import create_engine
-    from app.user_class import User
-    from app.main_alg import main_alg
-    from app.db_connect_conf import connect_string
     import sys
     import os
+    import shutil
+    import sqlalchemy as sa
+    from sqlalchemy.orm import sessionmaker
+    from app.main_alg import main_alg
+    from app.db_connect_conf import connect_string
 
 
-    engine = create_engine(connect_string)
+    meta = sa.MetaData()
+    engine = sa.create_engine(connect_string)
+
+    Users = sa.Table('users', meta, autoload=True, autoload_with=engine)
+    Payments = sa.Table('payments', meta, autoload=True, autoload_with=engine)
+    User_tr_log = sa.Table('user_transfer_log', meta, autoload=True, autoload_with=engine)
+
+
     Session = sessionmaker(bind=engine)
-
     session = Session()
 
-    users = session.query(User).filter_by(contract_received=1)
+    users = session.query(Users).filter_by(contract_received=1)
+    pays = session.query(Payments).count()
+    logs = session.query(User_tr_log).count()
 
-    if not os.path.exists("./out/"):
+    if os.path.exists("./out/"):
+        shutil.rmtree("./out/", )
         os.mkdir("./out/")
 
-    try:
-        for user in users:
-            main_alg(user)
-    except Exception as e:
-        print("ERROR!!! Exit with:", e)
-        sys.exit(1)
+    print(logs)
 
 
 if __name__ == '__main__':

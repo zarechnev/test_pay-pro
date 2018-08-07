@@ -1,8 +1,5 @@
-from .user_class import User
-import os
 
-
-def generate_file_name(user: User) -> str:
+def generate_file_name(user) -> str:
     """
     Генерирует имя файла, заменяя пробелы и двойные пробелы на "_".
     :param user:
@@ -15,7 +12,7 @@ def generate_file_name(user: User) -> str:
     return file_name
 
 
-def main_alg(user: User) -> bool:
+def main_alg(user) -> bool:
     """
     Функция реализующая основной алгоритм программы.
     :param user:
