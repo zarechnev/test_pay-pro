@@ -1,3 +1,5 @@
+from app.db import session_fabric, Users, Payments, User_tr_log
+
 
 def generate_file_name(user) -> str:
     """
@@ -12,15 +14,40 @@ def generate_file_name(user) -> str:
     return file_name
 
 
+def _2_1_1(user) -> str:
+    session = session_fabric()
+    payments = session.query(Payments.c.amount).filter(Payments.c.is_credit==0, Payments.c.status_id==0)
+    ans = 0
+    for pay in payments:
+        ans += pay.amount
+    return str(ans)
+
+
+def _2_1_2(user) -> str:
+    session = session_fabric()
+    payments = session.query(Payments.c.amount).filter(Payments.c.is_credit==1, Payments.c.status_id==0)
+    ans = 0
+    for pay in payments:
+        ans += pay.amount
+    return str(ans)
+
+
+def _2_1(user) -> str:
+    return str(float(_2_1_1(user)) + float(_2_1_2(user)))
+
+
 def main_alg(user) -> bool:
     """
     Функция реализующая основной алгоритм программы.
     :param user:
     :return:
     """
-    print(user)
 
     with open(generate_file_name(user), 'w') as file:
-        pass
+        file.write("1.1.\tОстаток гарантийного фонда\t= 0.\n")
+        file.write("2.\t\tВ Отчетном периоде.\n")
+        file.write("2.1.\tПринято платежей\t\t\t= " + _2_1(user) + "\n")
+        file.write("2.1.1\tпо предоплатной схеме\t\t\t= " + _2_1_1(user) + "\n")
+        file.write("2.1.2\tпо постоплатной схеме\t\t\t= " + _2_1_2(user) + "\n")
 
     return True
