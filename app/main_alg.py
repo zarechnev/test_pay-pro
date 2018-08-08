@@ -36,10 +36,12 @@ def _2_1(user) -> str:
     return str(float(_2_1_1(user)) + float(_2_1_2(user)))
 
 
-def main_alg(user) -> bool:
+def main_alg(user, date_start, date_end) -> bool:
     """
     Функция реализующая основной алгоритм программы.
     :param user:
+    :param date_start:
+    :param date_end:
     :return:
     """
 
