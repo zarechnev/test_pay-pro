@@ -31,7 +31,8 @@ def main():
     import os
     import sys
     import shutil
-    from concurrent.futures import ProcessPoolExecutor
+    from multiprocessing import cpu_count
+    from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
     from app.main_alg import main_alg
     from app.db import session_fabric, Users
 
@@ -47,7 +48,12 @@ def main():
 
     os.mkdir("./out/")
 
-    with ProcessPoolExecutor() as executor:
+    if cpu_count() < 4:
+        executor = ThreadPoolExecutor(max_workers=4)
+    else:
+        executor = ProcessPoolExecutor()
+
+    with executor:
         for user in users:
             executor.submit(main_alg, user, date_start, date_end)
 
