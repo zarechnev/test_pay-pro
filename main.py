@@ -31,6 +31,7 @@ def main():
     import os
     import sys
     import shutil
+    from concurrent.futures import ProcessPoolExecutor
     from app.main_alg import main_alg
     from app.db import session_fabric, Users
 
@@ -46,8 +47,9 @@ def main():
 
     os.mkdir("./out/")
 
-    for user in users:
-        main_alg(user, date_start, date_end)
+    with ProcessPoolExecutor() as executor:
+        for user in users:
+            executor.submit(main_alg, user, date_start, date_end)
 
 
 if __name__ == '__main__':
