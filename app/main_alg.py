@@ -1,4 +1,4 @@
-from app.db import session_fabric, Users, Payments, User_tr_log
+from app.db import session_fabric, Users, Payments, User_tr_log, Person
 
 
 def generate_file_name(user) -> str:
@@ -46,8 +46,9 @@ def main_alg(user, date_start, date_end) -> bool:
     """
 
     with open(generate_file_name(user), 'w') as file:
-        file.write("1.1.\tОстаток гарантийного фонда\t= 0.\n")
-        file.write("2.\t\tВ Отчетном периоде.\n")
+        file.write("Клиент: " + user.company + " (" + user.director +")\n\n")
+        file.write("1.1.\tОстаток гарантийного фонда\t\t= 0.\n")
+        file.write("2.\tВ Отчетном периоде.\n")
         file.write("2.1.\tПринято платежей\t\t\t= " + _2_1(user) + "\n")
         file.write("2.1.1\tпо предоплатной схеме\t\t\t= " + _2_1_1(user) + "\n")
         file.write("2.1.2\tпо постоплатной схеме\t\t\t= " + _2_1_2(user) + "\n")
