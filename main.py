@@ -21,8 +21,8 @@ def parser_fabric():
     import datetime
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--start', default=get_fist_day_of_current_month())
-    parser.add_argument('-e', '--end', default=datetime.datetime.now())
+    parser.add_argument('-s', '--start', default=datetime.datetime.strftime(get_fist_day_of_current_month(), "%d.%m.%Y"))
+    parser.add_argument('-e', '--end', default=datetime.datetime.strftime(datetime.datetime.now(), "%d.%m.%Y"))
 
     return parser
 
@@ -33,15 +33,16 @@ def main():
     import shutil
     from multiprocessing import cpu_count
     from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+    from datetime import datetime
     from app.main_alg import main_alg
     from app.db import session_fabric, Users
 
     parser = parser_fabric()
     namespace = parser.parse_args(sys.argv[1:])
-    date_start, date_end = namespace.start, namespace.end
+    date_start, date_end = datetime.strptime(namespace.start, "%d.%m.%Y"), datetime.strptime(namespace.end, "%d.%m.%Y")
 
     session = session_fabric()
-    users = session.query(Users).filter_by(contract_received=1)
+    users = session.query(Users).filter_by(contract_received=1).limit(4)
 
     if os.path.exists("./out/"):
         shutil.rmtree("./out/", )
