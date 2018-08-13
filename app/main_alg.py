@@ -78,13 +78,12 @@ def _2_1(user, date_start, date_end) -> str:
 
 
 def _2_3(user, date_start, date_end) -> str:
-    # TODO: Доделать! Не работает!
     session = session_fabric()
 
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
-    commissions = session.query(Payments.c.commision).\
+    commissions = session.query(Payments.c.commission).\
         filter(Payments.c.person_id.in_(persons), Payments.c.status_id == 0).\
         filter(Payments.c.date_create >= date_start).\
         filter(Payments.c.date_create <= date_end)
@@ -101,12 +100,68 @@ def _2_3(user, date_start, date_end) -> str:
     ans = 0
 
     for commission in commissions:
-        ans += commission.commission
+        ans += float(commission.commission)
 
     for credit_commission in credit_commissions:
-        ans += credit_commission.credit_commission
+        # TODO: ХАК,разобраться как сделать красиво
+        add = (float(0) if credit_commission.credit_commission == None else float(credit_commission.credit_commission))
+        ans += add
 
-    return str(ans)
+    return str(round(ans, 2))
+
+
+def _2_3_2(user, date_start, date_end) -> str:
+    session = session_fabric()
+
+    persons = session.query(Person.c.person_id).\
+        filter(Person.c.user_id == user.user_id)
+
+    commissions = session.query(Payments.c.commission).\
+        filter(Payments.c.person_id.in_(persons), Payments.c.status_id == 0, Payments.c.is_credit == 1).\
+        filter(Payments.c.date_create >= date_start).\
+        filter(Payments.c.date_create <= date_end)
+
+    commissions = commissions.all()
+
+    credit_commissions = session.query(Payments.c.credit_commission).\
+        filter(Payments.c.person_id.in_(persons), Payments.c.status_id == 0, Payments.c.is_credit == 1 ).\
+        filter(Payments.c.date_create >= date_start).\
+        filter(Payments.c.date_create <= date_end)
+
+    credit_commissions = credit_commissions.all()
+
+    ans = 0
+
+    for commission in commissions:
+        ans += float(commission.commission)
+
+    for credit_commission in credit_commissions:
+        # TODO: ХАК,разобраться как сделать красиво
+        add = (float(0) if credit_commission.credit_commission == None else float(credit_commission.credit_commission))
+        ans += add
+
+    return str(round(ans, 2))
+
+
+def _2_3_1(user, date_start, date_end) -> str:
+    session = session_fabric()
+
+    persons = session.query(Person.c.person_id).\
+        filter(Person.c.user_id == user.user_id)
+
+    commissions = session.query(Payments.c.commission).\
+        filter(Payments.c.person_id.in_(persons), Payments.c.status_id == 0, Payments.c.is_credit == 0).\
+        filter(Payments.c.date_create >= date_start).\
+        filter(Payments.c.date_create <= date_end)
+
+    commissions = commissions.all()
+
+    ans = 0
+
+    for commission in commissions:
+        ans += float(commission.commission)
+
+    return str(round(ans, 2))
 
 
 def _2_2_1(user, date_start, date_end) -> str:
@@ -123,7 +178,6 @@ def _2_2_1(user, date_start, date_end) -> str:
 
 def _2_2_2(user, date_start, date_end) -> str:
     return "0"
-
 
 
 def main_alg(user, date_start, date_end) -> bool:
@@ -146,6 +200,8 @@ def main_alg(user, date_start, date_end) -> bool:
         file.write("2.2.\tНачислено вознаграждений ПС за приём платежей\t= " + _2_2(user, date_start, date_end) + "\n")
         file.write("2.2.1.\tпо предоплатной схеме\t\t\t= " + _2_2_1(user, date_start, date_end) + "\n")
         file.write("2.2.2.\tпо постоплатной схеме\t\t\t= " + _2_2_2(user, date_start, date_end) + "\n")
-        file.write("2.3.\tНачислено вознаграждений ОПП за приём плитежей\t\t= " + _2_3(user, date_start, date_end) + "\n")
+        file.write("2.3.\tНачислено вознаграждений ОПП за приём плитежей\t= " + _2_3(user, date_start, date_end) + "\n")
+        file.write("2.3.1.\tпо предоплатной схеме\t\t\t= " + _2_3_1(user, date_start, date_end) + "\n")
+        file.write("2.3.2.\tпо постоплатной схеме\t\t\t= " + _2_3_2(user, date_start, date_end) + "\n")
 
     return True
