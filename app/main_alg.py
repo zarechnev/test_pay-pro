@@ -77,14 +77,53 @@ def _2_1(user, date_start, date_end) -> str:
     return str(ans)
 
 
-def _2_3(user) -> str:
+def _2_3(user, date_start, date_end) -> str:
+    # TODO: Доделать! Не работает!
     session = session_fabric()
 
-    payments = session.query(Payments.c.amount).filter(Payments.c.status_id == 0)
+    persons = session.query(Person.c.person_id).\
+        filter(Person.c.user_id == user.user_id)
+
+    commissions = session.query(Payments.c.commision).\
+        filter(Payments.c.person_id.in_(persons), Payments.c.status_id == 0).\
+        filter(Payments.c.date_create >= date_start).\
+        filter(Payments.c.date_create <= date_end)
+
+    commissions = commissions.all()
+
+    credit_commissions = session.query(Payments.c.credit_commission).\
+        filter(Payments.c.person_id.in_(persons), Payments.c.status_id == 0).\
+        filter(Payments.c.date_create >= date_start).\
+        filter(Payments.c.date_create <= date_end)
+
+    credit_commissions = credit_commissions.all()
+
     ans = 0
-    for pay in payments:
-        ans += pay.amount
+
+    for commission in commissions:
+        ans += commission.commission
+
+    for credit_commission in credit_commissions:
+        ans += credit_commission.credit_commission
+
     return str(ans)
+
+
+def _2_2_1(user, date_start, date_end) -> str:
+    return "0"
+
+
+def _2_2(user, date_start, date_end) -> str:
+    return "0"
+
+
+def _2_2_1(user, date_start, date_end) -> str:
+    return "0"
+
+
+def _2_2_2(user, date_start, date_end) -> str:
+    return "0"
+
 
 
 def main_alg(user, date_start, date_end) -> bool:
@@ -104,9 +143,9 @@ def main_alg(user, date_start, date_end) -> bool:
         file.write("2.1.\tПринято платежей\t\t\t\t= " + _2_1(user, date_start, date_end) + "\n")
         file.write("2.1.1\tпо предоплатной схеме\t\t\t= " + _2_1_1(user, date_start, date_end) + "\n")
         file.write("2.1.2\tпо постоплатной схеме\t\t\t= " + _2_1_2(user, date_start, date_end) + "\n")
-        file.write("2.2.\tНачислено вознаграждений ПС за приём платежей\t= 0\n")
-        file.write("2.2.1.\tпо предоплатной схеме\t\t\t= 0\n")
-        file.write("2.2.2.\tпо постоплатной схеме\t\t\t= 0\n")
-        file.write("2.3.\tНачислено вознаграждений ОПП за приём плитежей\t\t= " + _2_3(user) + "\n")
+        file.write("2.2.\tНачислено вознаграждений ПС за приём платежей\t= " + _2_2(user, date_start, date_end) + "\n")
+        file.write("2.2.1.\tпо предоплатной схеме\t\t\t= " + _2_2_1(user, date_start, date_end) + "\n")
+        file.write("2.2.2.\tпо постоплатной схеме\t\t\t= " + _2_2_2(user, date_start, date_end) + "\n")
+        file.write("2.3.\tНачислено вознаграждений ОПП за приём плитежей\t\t= " + _2_3(user, date_start, date_end) + "\n")
 
     return True

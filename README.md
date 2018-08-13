@@ -14,5 +14,5 @@ vim ./app/db_connect_conf.py
 
 ###### Use
 ```
-./venv/bin/python3 ./main.py
+./venv/bin/python3 ./main.py [-s, --start <start date in "dd.mm.yyyy"-format>]  [-e, --end <end date in "dd.mm.yyyy"-format>]
 ```
