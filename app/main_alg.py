@@ -27,7 +27,7 @@ def _2_1_1(user, date_start, date_end) -> str:
 
     payments = payments.all()
 
-    ans = 0.0
+    ans = 0
 
     for pay in payments:
         ans += pay.amount
@@ -48,7 +48,7 @@ def _2_1_2(user, date_start, date_end) -> float:
 
     payments = payments.all()
 
-    ans = 0.0
+    ans = 0
 
     for pay in payments:
         ans += pay.amount
@@ -69,7 +69,7 @@ def _2_1(user, date_start, date_end) -> float:
 
     payments = payments.all()
 
-    ans = 0.0
+    ans = 0
 
     for pay in payments:
         ans += pay.amount
@@ -97,7 +97,7 @@ def _2_3(user, date_start, date_end) -> float:
 
     credit_commissions = credit_commissions.all()
 
-    ans = 0.0
+    ans = 0
 
     for commission in commissions:
         ans += float(commission.commission)
@@ -130,7 +130,7 @@ def _2_3_2(user, date_start, date_end) -> float:
 
     credit_commissions = credit_commissions.all()
 
-    ans = 0.0
+    ans = 0
 
     for commission in commissions:
         ans += float(commission.commission)
@@ -156,7 +156,7 @@ def _2_3_1(user, date_start, date_end) -> float:
 
     commissions = commissions.all()
 
-    ans = 0.0
+    ans = 0
 
     for commission in commissions:
         ans += float(commission.commission)
@@ -175,7 +175,7 @@ def _3_2_3(user, date_start, date_end) -> float:
 
     amounts = amounts.all()
 
-    ans = 0.0
+    ans = 0
 
     for amount in amounts:
         ans += float(amount.amount)
@@ -195,7 +195,7 @@ def _3_1_1(user, date_start, date_end) -> float:
 
     amounts = amounts.all()
 
-    ans = 0.0
+    ans = 0
 
     for amount in amounts:
         ans += float(amount.amount)
@@ -211,24 +211,28 @@ def main_alg(user, date_start, date_end) -> bool:
     :param date_end:
     :return:
     """
-    p_1_1 = 0.0
-    p_2_1_1 = _2_1_1(user, date_start, date_end)
-    p_2_1_2 = _2_1_2(user, date_start, date_end)
-    p_2_1 = _2_1(user, date_start, date_end)
-    p_2_2 = 0.0
-    p_2_2_1 = 0.0
-    p_2_2_2 = 0.0
-    p_2_3 = _2_3(user, date_start, date_end)
-    p_2_3_1 = _2_3_1(user, date_start, date_end)
-    p_2_3_2 = _2_3_2(user, date_start, date_end)
-    p_3_1_1 = _3_1_1(user, date_start, date_end)
-    p_3_1_2 = 0.0
-    p_3_1 = p_3_1_1 + p_3_1_2
-    p_3_2_1 = p_2_1
-    p_3_2_2 = p_2_3
-    p_3_2_3 = _3_2_3(user, date_start, date_end)
-    p_3_2 = p_3_2_1 + p_3_2_2 + p_3_2_3
-    p_4_1 = p_1_1 + p_3_1 - p_3_2
+    try:
+        p_1_1 = 0
+        p_2_1_1 = _2_1_1(user, date_start, date_end)
+        p_2_1_2 = _2_1_2(user, date_start, date_end)
+        p_2_1 = _2_1(user, date_start, date_end)
+        p_2_2 = 0
+        p_2_2_1 = 0
+        p_2_2_2 = 0
+        p_2_3 = _2_3(user, date_start, date_end)
+        p_2_3_1 = _2_3_1(user, date_start, date_end)
+        p_2_3_2 = _2_3_2(user, date_start, date_end)
+        p_3_1_1 = _3_1_1(user, date_start, date_end)
+        p_3_1_2 = 0
+        p_3_1 = p_3_1_1 + p_3_1_2
+        p_3_2_1 = p_2_1
+        p_3_2_2 = p_2_3
+        p_3_2_3 = _3_2_3(user, date_start, date_end)
+        p_3_2 = p_3_2_1 + p_3_2_2 + p_3_2_3
+        p_4_1 = p_1_1 + p_3_1 - p_3_2
+        print("END")
+    except Exception as e:
+        print("ASDASDASD" + e)
 
     with open(generate_file_name(user), 'w') as file:
         file.write("Клиент: " + user.company + " (" + user.director +")\n\n")
