@@ -14,9 +14,7 @@ def generate_file_name(user) -> float:
     return file_name
 
 
-def _2_1_1(user, date_start, date_end) -> str:
-    session = session_fabric()
-
+def _2_1_1(user, date_start, date_end, session) -> str:
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
@@ -35,9 +33,7 @@ def _2_1_1(user, date_start, date_end) -> str:
     return ans
 
 
-def _2_1_2(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _2_1_2(user, date_start, date_end, session) -> float:
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
@@ -56,9 +52,7 @@ def _2_1_2(user, date_start, date_end) -> float:
     return ans
 
 
-def _2_1(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _2_1(user, date_start, date_end, session) -> float:
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
@@ -77,9 +71,7 @@ def _2_1(user, date_start, date_end) -> float:
     return ans
 
 
-def _2_3(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _2_3(user, date_start, date_end, session) -> float:
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
@@ -110,9 +102,7 @@ def _2_3(user, date_start, date_end) -> float:
     return round(ans, 2)
 
 
-def _2_3_2(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _2_3_2(user, date_start, date_end, session) -> float:
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
@@ -143,9 +133,7 @@ def _2_3_2(user, date_start, date_end) -> float:
     return round(ans, 2)
 
 
-def _2_3_1(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _2_3_1(user, date_start, date_end, session) -> float:
     persons = session.query(Person.c.person_id).\
         filter(Person.c.user_id == user.user_id)
 
@@ -164,14 +152,12 @@ def _2_3_1(user, date_start, date_end) -> float:
     return round(ans, 2)
 
 
-def _3_2_3(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _3_2_3(user, date_start, date_end, session) -> float:
     amounts = session.query(User_tr_log.c.amount).\
         filter(User_tr_log.c.user_id == user.user_id).\
         filter(User_tr_log.c.type == 2).\
-        filter(Payments.c.date_create >= date_start).\
-        filter(Payments.c.date_create <= date_end)
+        filter(User_tr_log.c.date >= date_start).\
+        filter(User_tr_log.c.date <= date_end)
 
     amounts = amounts.all()
 
@@ -183,15 +169,13 @@ def _3_2_3(user, date_start, date_end) -> float:
     return round(ans, 2)
 
 
-def _3_1_1(user, date_start, date_end) -> float:
-    session = session_fabric()
-
+def _3_1_1(user, date_start, date_end, session) -> float:
     amounts = session.query(User_tr_log.c.amount).\
         filter(User_tr_log.c.user_id == user.user_id).\
         filter(User_tr_log.c.type == 1). \
-        filter(User_tr_log.c['from'].in_([1, 8])). \
-        filter(Payments.c.date_create >= date_start).\
-        filter(Payments.c.date_create <= date_end)
+        filter(User_tr_log.c["from"].in_([1, 8])). \
+        filter(User_tr_log.c.date >= date_start).\
+        filter(User_tr_log.c.date <= date_end)
 
     amounts = amounts.all()
 
@@ -211,28 +195,28 @@ def main_alg(user, date_start, date_end) -> bool:
     :param date_end:
     :return:
     """
-    try:
-        p_1_1 = 0
-        p_2_1_1 = _2_1_1(user, date_start, date_end)
-        p_2_1_2 = _2_1_2(user, date_start, date_end)
-        p_2_1 = _2_1(user, date_start, date_end)
-        p_2_2 = 0
-        p_2_2_1 = 0
-        p_2_2_2 = 0
-        p_2_3 = _2_3(user, date_start, date_end)
-        p_2_3_1 = _2_3_1(user, date_start, date_end)
-        p_2_3_2 = _2_3_2(user, date_start, date_end)
-        p_3_1_1 = _3_1_1(user, date_start, date_end)
-        p_3_1_2 = 0
-        p_3_1 = p_3_1_1 + p_3_1_2
-        p_3_2_1 = p_2_1
-        p_3_2_2 = p_2_3
-        p_3_2_3 = _3_2_3(user, date_start, date_end)
-        p_3_2 = p_3_2_1 + p_3_2_2 + p_3_2_3
-        p_4_1 = p_1_1 + p_3_1 - p_3_2
-        print("END")
-    except Exception as e:
-        print("ASDASDASD" + e)
+    session = session_fabric()
+
+    p_1_1 = 0
+    p_2_1_1 = _2_1_1(user, date_start, date_end, session)
+    p_2_1_2 = _2_1_2(user, date_start, date_end, session)
+    p_2_1 = _2_1(user, date_start, date_end, session)
+    p_2_2 = 0
+    p_2_2_1 = 0
+    p_2_2_2 = 0
+    p_2_3 = _2_3(user, date_start, date_end, session)
+    p_2_3_1 = _2_3_1(user, date_start, date_end, session)
+    p_2_3_2 = _2_3_2(user, date_start, date_end, session)
+    p_3_1_1 = _3_1_1(user, date_start, date_end, session)
+    p_3_1_2 = 0
+    p_3_1 = p_3_1_1 + p_3_1_2
+    p_3_2_1 = p_2_1
+    p_3_2_2 = p_2_3
+    p_3_2_3 = _3_2_3(user, date_start, date_end, session)
+    p_3_2 = round(float(p_3_2_1) + float(p_3_2_2) + float(p_3_2_3), 2)
+    p_4_1 = round(p_1_1 + p_3_1 - p_3_2, 2)
+
+    session.close()
 
     with open(generate_file_name(user), 'w') as file:
         file.write("Клиент: " + user.company + " (" + user.director +")\n\n")
