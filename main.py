@@ -42,7 +42,7 @@ def main():
     date_start, date_end = datetime.strptime(namespace.start, "%d.%m.%Y"), datetime.strptime(namespace.end, "%d.%m.%Y")
 
     session = session_fabric()
-    users = session.query(Users).filter_by(contract_received=1)
+    users = session.query(Users).filter_by(contract_received=1).limit(4)
 
     if os.path.exists("./out/"):
         shutil.rmtree("./out/", )
